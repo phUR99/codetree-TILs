@@ -14,7 +14,7 @@ int main() {
     for (int i = 0; i < n; i ++){
         int cnt = 1;
         if (arr[i] > a){
-            cnt += ((arr[i] - a) % b == 0) ? (arr[i] - a) / b + 1 : (arr[i] - a) / b;
+            cnt += ((arr[i] - a) % b == 0) ? (arr[i] - a) / b : (arr[i] - a) / b + 1;
         }
         ans += cnt;
     }
