@@ -152,9 +152,10 @@ int main(){
         for (int i = 1; i <= n; i++)
         {
             for (int j =1; j <= n; j++){
+                int cur = state[i][j];
+                if (cur == 0) continue;
                 for (int k = 0; k < 4; k++)
-                {
-                    int cur = state[i][j];
+                {                    
                     if (k == 0){
                         int nx = i;
                         int ny = j +1;
@@ -205,7 +206,7 @@ int main(){
         for (int i = 1; i <= n; i++)
         {
             for (int j =1; j <= n; j++){
-                if(i == 1 || i == n || j == 1 || j == n || state[i][j] != 0) state[i][j]--;   
+                if((i == 1 || i == n || j == 1 || j == n) && state[i][j] != 0) state[i][j]--;   
             }            
         }
 
