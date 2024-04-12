@@ -28,7 +28,7 @@ int main(){
 
     while (m--)
     {
-        int x, y, m ,s ,d;
+        int x, y, m, s ,d;
         cin >> x >> y >> m >> s >> d;      
         board[x][y].push({m, s, d});                        
     }
@@ -38,8 +38,7 @@ int main(){
         {
             for (int j = 1; j <= n; j++)
             {
-                auto &q = board[i][j];
-                
+                auto &q = board[i][j];                
                 while (!q.empty())
                 {
                     auto cur = q.front(); q.pop();
@@ -65,23 +64,32 @@ int main(){
                     Q.push(cur);
                     continue;
                 }
-                int dir = 0;
+                vector<int> dir;
                 int sumMass = 0;
                 int sumSpeed = 0;
-                int cnt = 0;
+                int cnt = 0;                                
                 while (!q.empty())
                 {
                     auto cur = q.front(); q.pop();
                     sumMass += cur.mass;
                     sumSpeed += cur.speed;
-                    dir += cur.direction % 2;
+                    dir.push_back(cur.direction %2);
                     cnt++;
                 }
                 sumMass /= 5;
                 if(sumMass == 0) continue;
                 sumSpeed /= cnt;
-                dir = (dir % 2 == 0) ? 0 : 1;
-                for (int p = dir; p < 8; p += 2)
+                int flag = 0;
+                int cnt1 = 0;
+                int cnt2 = 0;
+                for (auto cur : dir)
+                {
+                    if(cur) cnt1++;
+                    else cnt2++;
+                }
+                if(cnt1 && cnt2) flag = 1;
+                
+                for (int p = flag; p < 8; p += 2)
                 {
                     Q.push({sumMass, sumSpeed, p});
                 }                
