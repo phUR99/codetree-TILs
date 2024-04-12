@@ -29,11 +29,7 @@ int main(){
     while (m--)
     {
         int x, y, m ,s ,d;
-        cin >> x >> y >> m >> s >> d;
-        while (s > n)
-        {
-            s -= n;
-        }        
+        cin >> x >> y >> m >> s >> d;      
         board[x][y].push({m, s, d});                        
     }
     while (k--)
