@@ -12,52 +12,54 @@ bool inrange(int x, int y){
 
 void wind(int x, int y, int dir, int cnt){
     if(cnt == 0) return;
+    // 오
     if(dir == 4){        
         if(inrange(x-1, y) && inrange(x-1, y+1) && wall[x][y][1] == false && wall[x-1][y+1][0] == false) {
             if(!tmp_state[x-1][y+1]){
                 tmp_state[x-1][y+1] = cnt;
                 wind(x-1, y+1, dir, cnt -1);
-            }            
+            }                      
         }
         if(inrange(x, y+1) && wall[x][y+1][0] == false) {
             if(!tmp_state[x][y+1]){
                 tmp_state[x][y+1] = cnt;
                 wind(x, y+1, dir, cnt -1);
-            }            
+            }                       
         }
         if(inrange(x+1, y) && inrange(x+1, y+1) && wall[x+1][y][1] == false && wall[x+1][y+1][0] == false) {
             if(!tmp_state[x+1][y+1]){
                 tmp_state[x+1][y+1] = cnt;
                 wind(x+1, y+1, dir, cnt -1);
-            }            
+            }                       
         }            
     }
+    // 왼
     else if (dir == 2){
         if(inrange(x-1, y) && inrange(x-1, y-1) && wall[x][y][1] == false && wall[x-1][y][0] == false) {
             if(!tmp_state[x-1][y-1]){
                 tmp_state[x-1][y-1] = cnt;
                 wind(x-1, y-1, dir, cnt -1);
-            }            
+            }                        
         }
         if(inrange(x, y-1) && wall[x][y][0] == false) {
             if(!tmp_state[x][y-1]){
                 tmp_state[x][y-1] = cnt;
                 wind(x, y-1, dir, cnt -1);
-            }            
+            }                   
         }
-        if(inrange(x+1, y) && inrange(x+1, y+1) && wall[x+1][y][1] == false && wall[x+1][y][0] == false) {
+        if(inrange(x+1, y) && inrange(x+1, y-1) && wall[x+1][y][1] == false && wall[x+1][y][0] == false) {
             if(!tmp_state[x+1][y-1]){
                 tmp_state[x+1][y-1] = cnt;
                 wind(x+1, y-1, dir, cnt -1);
-            }            
+            }                   
         }            
     }
     else if (dir == 3){
-         if(inrange(x, y+1) && inrange(x-1, y+1) && wall[x][y+1][1] == false && wall[x][y+1][0] == false) {
+        if(inrange(x, y+1) && inrange(x-1, y+1) && wall[x][y+1][1] == false && wall[x][y+1][0] == false) {
             if(!tmp_state[x-1][y+1]){
                 tmp_state[x-1][y+1] = cnt;
                 wind(x-1, y+1, dir, cnt -1);
-            }            
+            }                        
         }
         if(inrange(x-1, y) && wall[x][y][1] == false) {
             if(!tmp_state[x-1][y]){
@@ -72,21 +74,22 @@ void wind(int x, int y, int dir, int cnt){
             }            
         }            
     }
+    //아 0 -> 위 1 -> 왼
     else{
-        if(inrange(x, y+1) && inrange(x+1, y+1) && wall[x][y+1][1] == false && wall[x+1][y+1][0] == false) {
-            if(!tmp_state[x+1][y+1]){
+        if(inrange(x+1, y+1) && wall[x][y+1][1] == false && wall[x+1][y+1][0] == false) {
+            if(tmp_state[x+1][y+1] == 0){
                 tmp_state[x+1][y+1] = cnt;
                 wind(x+1, y+1, dir, cnt -1);
             }            
         }
-        if(inrange(x+1, y) && wall[x+1][y][1] == false) {
-            if(!tmp_state[x+1][y]){
+        if(inrange(x+1, y) && wall[x+1][y][0] == false) {
+            if(tmp_state[x+1][y] == 0){
                 tmp_state[x+1][y] = cnt;
                 wind(x+1, y, dir, cnt -1);
             }            
         }
-        if(inrange(x, y+1) && inrange(x+1, y-1) && wall[x][y][1] == false && wall[x+1][y-1][0] == false) {
-            if(!tmp_state[x+1][y-1]){
+        if(inrange(x+1, y-1) && wall[x][y][1] == false && wall[x+1][y-1][0] == false) {
+            if(tmp_state[x+1][y-1] == 0){
                 tmp_state[x+1][y-1] = cnt;
                 wind(x+1, y-1, dir, cnt -1);
             }            
@@ -134,7 +137,7 @@ int main(){
                     y = j;
                 }
                 else {
-                    x = i = 1;
+                    x = i + 1;
                     y = j;
                 }
                 tmp_state[x][y] = 5;
