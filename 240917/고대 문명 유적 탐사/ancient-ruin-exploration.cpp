@@ -18,11 +18,11 @@ bool cmp(vector<int> &a, vector<int> &b)
     {
         if (a[1] == b[1])
         {
-            if (a[2] == b[2])
+            if (a[3] == b[3])
             {
-                return a[3] < b[3];
+                return a[2] < b[2];
             }
-            return a[2] < b[2];
+            return a[3] < b[3];
         }
         return a[1] < b[1];
     }
@@ -229,13 +229,17 @@ int main()
     {
         int answer = 0;
         answer += find();
+
         del();
+
         fill();
 
         while (bfs() != 0)
         {
             answer += bfs();
+
             del();
+
             fill();
         }
         if (answer == 0)
