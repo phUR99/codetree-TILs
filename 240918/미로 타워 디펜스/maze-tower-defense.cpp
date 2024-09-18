@@ -138,8 +138,8 @@ void copy()
         else
             cnt++;
     }
-    nxt.push_back(num);
     nxt.push_back(cnt);
+    nxt.push_back(num);
     int l = min(arr.size(), nxt.size());
     for (int i = 0; i < l; i++)
     {
