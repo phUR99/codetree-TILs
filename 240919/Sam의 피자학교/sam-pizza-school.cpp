@@ -42,7 +42,7 @@ void roll()
                 break;
             L++;
         }
-        if (L < 2 * h)
+        if (L < 2 * (h)-1)
             return;
         vector<vector<int>> seq;
         for (int i = 0; i < h - 1; i++)
