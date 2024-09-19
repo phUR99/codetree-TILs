@@ -1,204 +1,142 @@
-#include <bits/stdc++.h>
-#define fastio                       \
-    ios_base::sync_with_stdio(NULL); \
-    cin.tie(NULL);                   \
-    cout.tie(NULL)
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
-int arr[105];
-int board[105][105];
-int k;
-int n;
-void print()
+
+int dx[] = {1, 0, -1, 0};
+int dy[] = {0, 1, 0, -1};
+int N, K;
+
+vector<vector<int>> board;
+
+bool if_end()
 {
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            cout << setw(2) << setfill('0') << board[i][j] << ' ';
-        }
-        cout << '\n';
-    }
-    cout << '\n';
+    int max_fishes = *max_element(board[0].begin(), board[0].end());
+    int min_fishes = *min_element(board[0].begin(), board[0].end());
+    return ((max_fishes - min_fishes) <= K);
 }
 
-void roll()
+void move_fishes()
 {
+    vector<vector<int>> new_board = board;
 
-    memset(board, -1, sizeof(board));
-    for (int i = 0; i < n; i++)
+    for (int y = 0; y < N; ++y)
     {
-        board[0][i] = arr[i];
-    }
-    int h = 1;
-    int cnt = 1;
-    while (true)
-    {
-        int L = 0;
-        for (int i = 0; i <= n; i++)
+        for (int x = 0; x < N; ++x)
         {
-            if (board[0][i] == -1)
-                break;
-            L++;
-        }
-        if (L < 2 * (h))
-            return;
-        h += (cnt % 2);
-        cnt++;
-
-        vector<vector<int>> seq;
-        for (int i = 0; i < h - 1; i++)
-        {
-            vector<int> tmp;
-            for (int j = 0; j < n; j++)
-            {
-                if (board[j][i] == -1)
-                    break;
-                tmp.push_back(board[j][i]);
-                board[j][i] = -1;
-            }
-            seq.push_back(tmp);
-        }
-        reverse(seq.begin(), seq.end());
-        for (int i = 0; i < h - 1; i++)
-        {
-            for (int j = 0; j < seq[i].size(); j++)
-            {
-                board[i + 1][j + h - 1] = seq[i][j];
-            }
-        }
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                swap(board[i][j], board[i][j + h - 1]);
-            }
-        }
-    }
-}
-void rollHalf()
-{
-    memset(board, -1, sizeof(board));
-    for (int i = 0; i < n; i++)
-    {
-        board[0][i] = arr[i];
-    }
-    int nn = n;
-    for (int t = 0; t < 2; t++)
-    {
-        nn /= 2;
-        vector<vector<int>> seq;
-        for (int i = 0; i < nn; i++)
-        {
-            vector<int> tmp;
-            for (int j = 0; j < n; j++)
-            {
-                if (board[j][i] == -1)
-                    break;
-                tmp.push_back(board[j][i]);
-                board[j][i] = -1;
-            }
-            reverse(tmp.begin(), tmp.end());
-            seq.push_back(tmp);
-        }
-        reverse(seq.begin(), seq.end());
-        for (int i = 0; i < seq.size(); i++)
-        {
-            for (int j = 0; j < seq[i].size(); j++)
-            {
-                board[j + t + 1][i + nn] = seq[i][j];
-            }
-        }
-
-        for (int j = 0; j < n; j++)
-        {
-            for (int k = 0; k < n; k++)
-            {
-                swap(board[j][k], board[j][k + nn]);
-            }
-        }
-    }
-}
-void compress()
-{
-    int tmpBoard[100][100];
-    memset(tmpBoard, 0, sizeof(tmpBoard));
-    int dx[] = {1, 0};
-    int dy[] = {0, 1};
-
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            if (board[i][j] == -1)
+            if (board[y][x] == -1)
                 continue;
-            for (int dir = 0; dir < 2; dir++)
+            for (int d = 0; d < 4; ++d)
             {
-                int nx = i + dx[dir];
-                int ny = j + dy[dir];
-                if (nx < 0 || nx >= n || ny < 0 || ny >= n)
+                int ny = y + dy[d];
+                int nx = x + dx[d];
+                if (ny < 0 || nx < 0 || ny >= N || nx >= N || board[ny][nx] == -1)
                     continue;
-                if (board[nx][ny] == -1)
-                    continue;
-                int div = (board[i][j] - board[nx][ny]) / 5;
-                div = -div;
-                tmpBoard[i][j] += div;
-                tmpBoard[nx][ny] -= div;
+                // 새로운 값을 new_board 에 기록했으므로 중복 없이 모든 칸에 발생한 상황 반영
+                new_board[y][x] += (int)(board[ny][nx] - board[y][x]) / 5;
             }
         }
     }
 
-    for (int i = 0; i < n; i++)
+    vector<int> flat_bowl;
+    for (int x = 0; x < N; ++x)
     {
-        for (int j = 0; j < n; j++)
+        for (int y = 0; y < N; ++y)
         {
-            board[i][j] += tmpBoard[i][j];
-        }
-    }
-    vector<int> ret;
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            if (board[j][i] == -1)
+            if (new_board[y][x] == -1)
                 continue;
-            ret.push_back(board[j][i]);
+            else
+                flat_bowl.push_back(new_board[y][x]);
         }
     }
-    for (int i = 0; i < n; i++)
-    {
-        arr[i] = ret[i];
-    }
+
+    // board를 초기화 한 후 board[0]를 flat_bowl로 교체
+    board = vector<vector<int>>(N, vector<int>(N, -1));
+    board[0] = flat_bowl;
 }
+
+void move()
+{
+    int ly = 1, lx = 1; // length y, length x
+    int sx = 0;         // start x
+    // 1. 물고기 추가
+    int min_fishes = *min_element(board[0].begin(), board[0].end());
+    for (int i = 0; i < N; ++i)
+    {
+        if (board[0][i] == min_fishes)
+            board[0][i]++;
+    }
+    // 2. 어항을 말며 이동
+    while (sx + ly + lx <= N)
+    {
+        for (int y = 0; y < ly; ++y)
+        {
+            for (int x = 0; x < lx; ++x)
+            {
+                int ny = lx - x;
+                int nx = sx + lx + y;
+                board[ny][nx] = board[y][x + sx];
+                board[y][x + sx] = -1;
+            }
+        }
+        sx += lx;
+        if (ly == lx)
+            ly++;
+        else
+            lx++;
+    }
+
+    // 3. 물고기 이동
+    move_fishes();
+
+    // 4. 중심을 기준으로 어항 2번 이동
+    sx = 0;
+    ly = 1;
+    lx = N / 2;
+
+    for (int i = 0; i < 2; ++i)
+    {
+        for (int y = 0; y < ly; ++y)
+        {
+            for (int x = 0; x < lx; ++x)
+            {
+                int ny = 2 * ly - y - 1;
+                int nx = 2 * lx + sx - x - 1;
+                board[ny][nx] = board[y][x + sx];
+                board[y][x + sx] = -1;
+            }
+        }
+
+        sx += lx;
+        lx /= 2;
+        ly *= 2;
+    }
+
+    // 5. 물고기 이동
+    move_fishes();
+}
+
+int solve()
+{
+    int count = 0;
+    while (!if_end())
+    {
+        count++;
+        move();
+    }
+
+    return count;
+}
+
 int main()
 {
-    fastio;
-    cin >> n >> k;
-    memset(arr, -1, sizeof(arr));
-    for (int i = 0; i < n; i++)
+    cin >> N >> K;
+    board = vector<vector<int>>(N, vector<int>(N, -1));
+    for (int i = 0; i < N; ++i)
     {
-        cin >> arr[i];
+        cin >> board[0][i];
     }
-    int cnt = 0;
-    while (true)
-    {
-        int m = *min_element(arr, arr + n);
-        int M = *max_element(arr, arr + n);
-        if (M - m <= k)
-            break;
-        for (int i = 0; i < n; i++)
-        {
-            if (arr[i] == m)
-                arr[i]++;
-        }
-        roll();
-        // print();
-        compress();
-        rollHalf();
-        // print();
-        compress();
-        cnt++;
-    }
-    cout << cnt;
-
+    cout << solve();
     return 0;
 }
