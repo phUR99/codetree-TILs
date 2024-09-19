@@ -34,16 +34,17 @@ void roll()
     while (true)
     {
         int L = 0;
-        h += (cnt % 2);
-        cnt++;
         for (int i = 0; i <= n; i++)
         {
             if (board[0][i] == -1)
                 break;
             L++;
         }
-        if (L < 2 * (h)-1)
+        if (L < 2 * (h))
             return;
+        h += (cnt % 2);
+        cnt++;
+
         vector<vector<int>> seq;
         for (int i = 0; i < h - 1; i++)
         {
@@ -72,8 +73,6 @@ void roll()
                 swap(board[i][j], board[i][j + h - 1]);
             }
         }
-
-        // print();
     }
 }
 void rollHalf()
@@ -192,8 +191,10 @@ int main()
                 arr[i]++;
         }
         roll();
+        // print();
         compress();
         rollHalf();
+        // print();
         compress();
         cnt++;
     }
