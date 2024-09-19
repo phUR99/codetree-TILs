@@ -29,47 +29,51 @@ void roll()
     {
         board[0][i] = arr[i];
     }
-    for (int i = 0; i < n; i++)
+    int h = 1;
+    int cnt = 1;
+    while (true)
     {
-        int l = max(1, i);
-        int s = -1;
-        for (int j = 0; j <= n; j++)
+        int L = 0;
+        h += (cnt % 2);
+        cnt++;
+        for (int i = 0; i <= n; i++)
         {
-            if (board[0][j] != -1)
-                continue;
-            s = j;
-            break;
+            if (board[0][i] == -1)
+                break;
+            L++;
         }
-        if (s < 2 * l)
+        if (L < 2 * h)
             return;
-
-        vector<vector<int>> sequence;
-        for (int k = 0; k < l; k++)
+        vector<vector<int>> seq;
+        for (int i = 0; i < h - 1; i++)
         {
             vector<int> tmp;
-            for (int j = 0; j < i + 1; j++)
+            for (int j = 0; j < n; j++)
             {
-                tmp.push_back(board[j][k]);
-                board[j][k] = -1;
+                if (board[j][i] == -1)
+                    break;
+                tmp.push_back(board[j][i]);
+                board[j][i] = -1;
             }
-            sequence.push_back(tmp);
+            seq.push_back(tmp);
         }
-        reverse(sequence.begin(), sequence.end());
-        for (int j = 0; j < sequence.size(); j++)
+        reverse(seq.begin(), seq.end());
+        for (int i = 0; i < h - 1; i++)
         {
-            for (int k = 0; k < i + 1; k++)
+            for (int j = 0; j < seq[i].size(); j++)
             {
-                board[j + 1][k + l] = sequence[j][k];
+                board[i + 1][j + h - 1] = seq[i][j];
+            }
+        }
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                swap(board[i][j], board[i][j + h - 1]);
             }
         }
 
-        for (int j = 0; j < n; j++)
-        {
-            for (int k = 0; k < n; k++)
-            {
-                swap(board[j][k], board[j][k + l]);
-            }
-        }
+        // print();
     }
 }
 void rollHalf()
@@ -191,7 +195,6 @@ int main()
         compress();
         rollHalf();
         compress();
-
         cnt++;
     }
     cout << cnt;
