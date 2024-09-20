@@ -81,13 +81,13 @@ void rotate()
     squareRot(l + 1, 0, l);
     squareRot(l + 1, l + 1, l);
     vector<int> row, col;
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < n; i++)
     {
         row.push_back(board[i][l]);
         col.push_back(board[l][i]);
     }
     reverse(col.begin(), col.end());
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < n; i++)
     {
         board[l][i] = row[i];
         board[i][l] = col[i];
@@ -149,6 +149,8 @@ int solve()
             int cnt2 = groupCnt[j].second;
             int g1 = groupCnt[i].first;
             int g2 = groupCnt[j].first;
+            if (now.find({g1, g2}) == now.end())
+                continue;
             int cur = now[{g1, g2}] * groupNum[g1] * groupNum[g2] * (cnt1 + cnt2);
             ret += cur;
         }
