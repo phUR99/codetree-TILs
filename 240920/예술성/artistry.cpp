@@ -9,11 +9,11 @@ int board[30][30];
 int group[30][30];
 int solve();
 void rotate();
-int find(int c1, int c2)
+map<pair<int, int>, int> search()
 {
     int dx[] = {1, 0};
     int dy[] = {0, 1};
-    int ret = 0;
+    map<pair<int, int>, int> ret;
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
@@ -24,10 +24,13 @@ int find(int c1, int c2)
                 int ny = j + dy[dir];
                 if (nx < 0 || nx >= n || ny < 0 || ny >= n)
                     continue;
-                if ((group[i][j] == c1 && group[nx][ny] == c2) || (group[i][j] == c2 && group[nx][ny] == c1))
-                {
-                    ret++;
-                }
+                int c1 = group[i][j];
+                int c2 = group[nx][ny];
+                if (c1 == c2)
+                    continue;
+                if (c1 > c2)
+                    swap(c1, c2);
+                ret[{c1, c2}]++;
             }
         }
     }
@@ -137,7 +140,7 @@ int solve()
             cnt++;
         }
     }
-
+    auto now = search();
     for (int i = 0; i < groupCnt.size(); i++)
     {
         for (int j = i + 1; j < groupCnt.size(); j++)
@@ -146,7 +149,7 @@ int solve()
             int cnt2 = groupCnt[j].second;
             int g1 = groupCnt[i].first;
             int g2 = groupCnt[j].first;
-            int cur = find(g1, g2) * groupNum[g1] * groupNum[g2] * (cnt1 + cnt2);
+            int cur = now[{g1, g2}] * groupNum[g1] * groupNum[g2] * (cnt1 + cnt2);
             ret += cur;
         }
     }
