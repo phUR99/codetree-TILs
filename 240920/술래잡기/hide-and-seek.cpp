@@ -32,6 +32,8 @@ void makeShape()
                 y = y + dy[cnt];
                 if (oob(x, y))
                     return;
+                if (x == 1 && y == 1)
+                    return;
                 shape.push_back({x, y, cnt});
             }
             x = x + dx[cnt];
@@ -57,7 +59,7 @@ int returnDir(int dir)
 }
 void moving(int x, int y)
 {
-    int dx[] = {1, 0, -1, 0};
+    int dx[] = {-1, 0, 1, 0};
     int dy[] = {0, 1, 0, -1};
 
     for (int i = 1; i <= n; i++)
@@ -189,6 +191,7 @@ int main()
         answer += solve(x, y, d) * t;
         idx++;
     }
+
     cout << answer;
     return 0;
 }
